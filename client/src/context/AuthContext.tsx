@@ -46,11 +46,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
           setToken(storedToken);
           setUser(JSON.parse(storedUser));
 
-          // Verify token is still valid
           try {
             await authAPI.getCurrentUser();
           } catch (error) {
-            // Token is invalid, clear auth data
             localStorage.removeItem("token");
             localStorage.removeItem("user");
             setToken(null);
@@ -73,7 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.setItem("token", userToken);
     localStorage.setItem("user", JSON.stringify(userData));
   };
-
+  // TODO : later implement a better logout but for now it's a dummy logout since it wasn't required
   const logout = () => {
     setUser(null);
     setToken(null);

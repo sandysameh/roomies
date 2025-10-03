@@ -29,40 +29,12 @@ export const useRoomManagement = () => {
     [message]
   );
 
-  const handleJoinRoom = useCallback(
-    async (roomName: string) => {
-      try {
-        const roomResponse = await roomsAPI.getRoom(roomName);
-
-        if (!roomResponse.success) {
-          throw new Error("Failed to get room");
-        }
-
-        // Navigate to room - let VideoRoom component handle Daily call object lifecycle
-        navigate(`/room/${roomName}`, {
-          state: {
-            roomData: roomResponse.room,
-            token: roomResponse.token,
-          },
-        });
-
-        message.success(`Joining room: ${roomName}`);
-        return { success: true };
-      } catch (error: any) {
-        console.error("Error joining room:", error);
-        message.error("Failed to join room");
-        return { success: false, error };
-      }
-    },
-    [navigate, message]
-  );
-
   const handleRouteToRoom = useCallback(
     async (roomName: string) => {
       try {
         const roomResponse = await roomsAPI.getRoom(roomName);
-
         if (!roomResponse.success) {
+          message.error("Failed to get room");
           throw new Error("Failed to get room");
         }
 
@@ -101,7 +73,6 @@ export const useRoomManagement = () => {
   return {
     createLoading,
     handleCreateRoom,
-    handleJoinRoom,
     handleRouteToRoom,
     handleDeleteRoom,
   };

@@ -12,4 +12,3 @@ export {
   Z_INDEX,
   ANIMATION,
 } from "./sizes";
-

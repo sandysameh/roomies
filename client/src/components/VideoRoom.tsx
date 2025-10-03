@@ -23,7 +23,6 @@ import {
 } from "@ant-design/icons";
 import Daily from "@daily-co/daily-js";
 import { useAuth } from "../context/AuthContext";
-import { useRoomManagement } from "../hooks/useRoomManagement";
 import { roomsAPI } from "../services/api";
 
 const { Header, Content, Sider } = Layout;

@@ -27,7 +27,6 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   if (!user) {
     return <Navigate to="/login" replace />;
   }
-  console.log("here", user);
 
   return <>{children}</>;
 };
