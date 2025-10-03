@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, message, Empty, Spin, App } from "antd";
+import { Form, message, Empty, Spin, App, Space } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useRoomManagement } from "../../hooks/useRoomManagement";
@@ -125,6 +125,9 @@ const Dashboard: React.FC<DashboardProps> = ({ width, height }) => {
           <ContentHeader>
             <ContentTitle level={2}>Available Rooms</ContentTitle>
             <ContentDescription type="secondary">
+              <div>
+                <b>PS: Participant Take time to update</b>
+              </div>
               {user?.isAdmin
                 ? "Create new rooms or join existing ones"
                 : "Join any available room to start video calling"}

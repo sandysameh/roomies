@@ -82,7 +82,9 @@ const RoomCard: React.FC<RoomCardProps> = ({
               count={room.participantCount}
               style={{
                 backgroundColor:
-                  room.participantCount > 0 ? COLORS.success.main : COLORS.background.disabled,
+                  room.participantCount > 0
+                    ? COLORS.success.main
+                    : COLORS.background.disabled,
               }}
               title={`${room.participantCount} participant(s)`}
             />

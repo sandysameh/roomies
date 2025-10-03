@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Form, Input, Space } from "antd";
+import { Modal, Form, Input } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { ModalForm, ModalActions, CancelButton } from "./Dashboard.styles";

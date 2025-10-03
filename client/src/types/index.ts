@@ -48,10 +48,10 @@ export interface ApiResponse<T = any> {
 }
 
 export interface Participant {
-  session_id: string;
-  user_name: string;
-  audio: boolean;
-  video: boolean;
-  screen: boolean;
-  joined_at: string;
+  id: string;
+  name: string;
+  isLocal: boolean;
+  audioEnabled: boolean;
+  videoEnabled: boolean;
+  isOwner?: boolean;
 }

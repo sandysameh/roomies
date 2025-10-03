@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Card, Button, Typography } from "antd";
+import { Card, Typography } from "antd";
 import {
   BORDER_RADIUS,
   COLORS,

@@ -29,7 +29,6 @@ class AuthController {
   async getMe(req, res) {
     try {
       const user = authService.getUserById(req.user.id);
-      console.log("User:", user);
 
       if (!user) {
         return res.status(404).json({ error: "User not found" });

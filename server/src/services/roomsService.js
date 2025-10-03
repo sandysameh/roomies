@@ -119,7 +119,6 @@ export const roomsService = {
 
     if (!storedRoom) {
       const dailyRoom = await callDailyAPI(`/rooms/${roomName}`);
-      console.log("dailyRoom sandy", dailyRoom);
       if (!dailyRoom) {
         const error = new Error("Room not found");
         error.status = 404;
