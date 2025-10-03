@@ -71,7 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     localStorage.setItem("token", userToken);
     localStorage.setItem("user", JSON.stringify(userData));
   };
-  // TODO : later implement a better logout but for now it's a dummy logout since it wasn't required
+
   const logout = () => {
     setUser(null);
     setToken(null);

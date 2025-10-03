@@ -38,15 +38,8 @@ export const ParticipantVideo: React.FC<ParticipantVideoProps> = ({
         playsInline
         $isVisible={participant.videoEnabled}
         $isFullscreen={isFullscreen}
-        onLoadedMetadata={() => {
-          console.log(
-            "📺 Video metadata loaded for:",
-            participant.name,
-            participant.isLocal ? "(LOCAL)" : "(REMOTE)"
-          );
-        }}
         onError={(e) => {
-          console.error("❌ Video error for:", participant.name, e);
+          console.error("Video error for:", participant.name, e);
         }}
       />
 

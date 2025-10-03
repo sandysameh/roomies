@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { Layout, Card, Button, Typography } from "antd";
 import {
-  COLORS,
   SPACING,
   FONT_SIZES,
   FONT_WEIGHTS,

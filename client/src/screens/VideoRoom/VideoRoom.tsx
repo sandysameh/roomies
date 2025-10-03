@@ -34,7 +34,6 @@ const VideoRoom: React.FC = () => {
   } = useDaily();
 
   const [loading, setLoading] = useState(true);
-  const [roomData, setRoomData] = useState<any>(null);
   const hasSetupRef = useRef(false);
 
   // Setup room once when component mounts
@@ -75,8 +74,6 @@ const VideoRoom: React.FC = () => {
             return;
           }
         }
-
-        setRoomData(roomData);
 
         // Join the room using the Daily context
         await joinRoom(roomData.url, roomName);

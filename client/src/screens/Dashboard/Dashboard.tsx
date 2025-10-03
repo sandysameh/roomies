@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, message, Empty, Spin, App, Space } from "antd";
+import { Form, message, Empty, Spin, App } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useRoomManagement } from "../../hooks/useRoomManagement";
@@ -59,8 +59,8 @@ const Dashboard: React.FC<DashboardProps> = ({ width, height }) => {
 
   useEffect(() => {
     fetchRooms();
-    // Refresh room list every 30 seconds to update participant counts
-    const interval = setInterval(fetchRooms, 30000);
+    // Refresh room list every 10 seconds to update participant counts
+    const interval = setInterval(fetchRooms, 10000);
     return () => clearInterval(interval);
   }, []);
 

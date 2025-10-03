@@ -1,13 +1,11 @@
 import React, { useCallback } from "react";
-import { useNavigate } from "react-router-dom";
-import { Button, Tooltip } from "antd";
+import { Tooltip } from "antd";
 import {
   AudioOutlined,
   AudioMutedOutlined,
   VideoCameraOutlined,
   VideoCameraAddOutlined,
   PhoneOutlined,
-  ArrowLeftOutlined,
 } from "@ant-design/icons";
 import {
   VideoRoomHeader as StyledHeader,
@@ -42,8 +40,6 @@ export const VideoRoomHeader: React.FC<VideoRoomHeaderProps> = ({
   onToggleVideo,
   onLeaveRoom,
 }) => {
-  const navigate = useNavigate();
-
   const handleToggleAudio = useCallback(
     async (e?: React.MouseEvent) => {
       if (e) {

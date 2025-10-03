@@ -32,20 +32,8 @@ export const VideoGrid: React.FC<VideoGridProps> = ({
       if (el) {
         if (participant.isLocal) {
           localVideoRef.current = el;
-          console.log(
-            "🏠 Local video ref set:",
-            el,
-            "for participant:",
-            participant.name
-          );
         } else {
           videoRefs.current.set(participant.id, el);
-          console.log(
-            "🌐 Remote video ref set for:",
-            participant.id,
-            participant.name,
-            el
-          );
         }
       }
     };

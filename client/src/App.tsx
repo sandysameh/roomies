@@ -10,7 +10,6 @@ import { AuthProvider } from "./context/AuthContext";
 import { DailyProvider } from "./context/DailyContext";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { LoginPage, Dashboard, VideoRoom } from "./screens";
-import "./App.css";
 
 const App: React.FC = () => {
   return (
