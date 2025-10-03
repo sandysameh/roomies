@@ -98,20 +98,3 @@ export const COLORS = {
     hover: "rgba(102, 126, 234, 0.4)",
   },
 } as const;
-
-// Color utility functions
-export const getGradient = (opacity = 1) =>
-  opacity === 1
-    ? COLORS.primary.gradient
-    : `linear-gradient(135deg, rgba(102, 126, 234, ${opacity}) 0%, rgba(118, 75, 162, ${opacity}) 100%)`;
-
-export const getGradientHover = (opacity = 1) =>
-  opacity === 1
-    ? COLORS.primary.gradientHover
-    : `linear-gradient(135deg, rgba(90, 111, 216, ${opacity}) 0%, rgba(106, 65, 144, ${opacity}) 100%)`;
-
-export const getGradientActive = (opacity = 1) =>
-  opacity === 1
-    ? COLORS.primary.gradientActive
-    : `linear-gradient(135deg, rgba(78, 91, 198, ${opacity}) 0%, rgba(94, 57, 126, ${opacity}) 100%)`;
-

@@ -32,8 +32,12 @@ const Dashboard: React.FC<DashboardProps> = ({ width, height }) => {
   const [loading, setLoading] = useState(true);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const { user, logout } = useAuth();
-  const { createLoading, handleCreateRoom, handleJoinRoom, handleDeleteRoom } =
-    useRoomManagement();
+  const {
+    createLoading,
+    handleCreateRoom,
+    handleRouteToRoom,
+    handleDeleteRoom,
+  } = useRoomManagement();
   const navigate = useNavigate();
   const [form] = Form.useForm();
   const { modal } = App.useApp();
@@ -70,7 +74,7 @@ const Dashboard: React.FC<DashboardProps> = ({ width, height }) => {
   };
 
   const onJoinRoom = async (roomName: string) => {
-    await handleJoinRoom(roomName);
+    await handleRouteToRoom(roomName);
   };
 
   const onDeleteRoom = async (roomName: string) => {

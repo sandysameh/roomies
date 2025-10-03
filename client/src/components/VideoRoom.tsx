@@ -21,7 +21,10 @@ import {
   ArrowLeftOutlined,
   UserOutlined,
 } from "@ant-design/icons";
+import Daily from "@daily-co/daily-js";
 import { useAuth } from "../context/AuthContext";
+import { useRoomManagement } from "../hooks/useRoomManagement";
+import { roomsAPI } from "../services/api";
 
 const { Header, Content, Sider } = Layout;
 const { Title, Text } = Typography;
@@ -42,7 +45,6 @@ const VideoRoom: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user } = useAuth();
-
   // Real participants state
   const [participants, setParticipants] = useState<RealParticipant[]>([]);
   const [localAudio, setLocalAudio] = useState(true);
@@ -67,12 +69,24 @@ const VideoRoom: React.FC = () => {
       navigate("/dashboard");
       return;
     }
-    console.log("HENAA??", roomName, user);
 
     // Prevent multiple setup attempts
-    if (callObjectRef.current || joining || isInitializedRef.current) {
-      console.log("Already setting up or call object exists, skipping...");
+    if (joining || isInitializedRef.current) {
+      console.log("Already setting up, skipping...");
       return;
+    }
+
+    // Check if there's already an active call object that's in a meeting
+    const existingCallObject = (window as any).dailyCallObject;
+    if (existingCallObject && callObjectRef.current === existingCallObject) {
+      const meetingState = existingCallObject.meetingState();
+      if (meetingState === "joined-meeting") {
+        console.log(
+          "Already in a meeting with this call object, skipping setup"
+        );
+        setLoading(false);
+        return;
+      }
     }
 
     isInitializedRef.current = true;
@@ -81,20 +95,100 @@ const VideoRoom: React.FC = () => {
       setJoining(true);
       console.log("Setting up room for:", roomName);
 
-      // Get room data from navigation state (passed from Dashboard)
-      const roomData = location.state?.roomData;
-      const callObject = (window as any).dailyCallObject;
+      let callObject = (window as any).dailyCallObject;
+      let roomData = location.state?.roomData;
 
-      if (!roomData || !callObject) {
-        console.error("No room data or call object found");
-        message.error("Room data not found");
-        navigate("/dashboard");
-        return;
+      // Check if Daily call object exists and destroy it
+      if (callObject) {
+        console.log("🧹 Existing Daily call object found, destroying...");
+        try {
+          // First leave if currently in a call
+          const callState = callObject.meetingState();
+          if (callState !== "left-meeting" && callState !== "error") {
+            console.log("🚪 Leaving existing call before destroying...");
+            await callObject.leave();
+          }
+
+          // Wait a bit for leave to complete
+          await new Promise((resolve) => setTimeout(resolve, 500));
+
+          // Now destroy
+          await callObject.destroy();
+          console.log("✅ Successfully destroyed existing call object");
+        } catch (e) {
+          console.warn("Error destroying existing call object:", e);
+        }
+        callObject = null;
+        (window as any).dailyCallObject = null;
+        callObjectRef.current = null;
+
+        // Wait a bit more to ensure cleanup is complete
+        await new Promise((resolve) => setTimeout(resolve, 500));
       }
+
+      // If no room data from navigation, fetch it
+      if (!roomData) {
+        console.log("📡 No room data found, fetching from API...");
+        try {
+          const roomResponse = await roomsAPI.getRoom(roomName);
+          if (!roomResponse.success) {
+            throw new Error("Failed to get room data");
+          }
+          roomData = roomResponse.room;
+        } catch (error) {
+          console.error("Error fetching room data:", error);
+          message.error("Failed to get room information");
+          navigate("/dashboard");
+          return;
+        }
+      }
+
+      // Create new Daily call object and join
+      console.log("🚀 Creating new Daily call object and joining room...");
+      try {
+        // Double-check that no call object exists before creating
+        try {
+          const existingInstance = Daily.getCallInstance();
+          if (existingInstance) {
+            console.log(
+              "⚠️ Found existing call object instance, destroying it..."
+            );
+            try {
+              await existingInstance.destroy();
+            } catch (e) {
+              console.warn("Error destroying instance:", e);
+            }
+            // Wait for cleanup
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+          }
+        } catch (e) {
+          // No existing instance, which is what we want
+          console.log("No existing call instance found, proceeding...");
+        }
+
+        callObject = Daily.createCallObject();
+        console.log("✅ Successfully created new Daily call object");
+      } catch (createError: any) {
+        console.error("❌ Error creating Daily call object:", createError);
+        throw new Error(
+          `Failed to create Daily call object: ${
+            createError?.message || createError
+          }`
+        );
+      }
+
+      await callObject.join({
+        url: roomData.url,
+        token: localStorage.getItem("token") || "",
+        userName: user?.name || user?.email || "User",
+        startVideoOff: true, // Start with video off so user can control it
+        startAudioOff: false, // Start with audio on
+      });
 
       // Store room data and call object
       setRoomData(roomData);
       callObjectRef.current = callObject;
+      (window as any).dailyCallObject = callObject;
 
       // Set up Daily event listeners
       setupDailyEventListeners(callObject);
@@ -177,6 +271,21 @@ const VideoRoom: React.FC = () => {
           console.warn("Error destroying call object after error:", e);
         }
         callObjectRef.current = null;
+        (window as any).dailyCallObject = null;
+      }
+
+      // Also clean up any remaining instances
+      try {
+        const existingInstance = Daily.getCallInstance();
+        if (existingInstance) {
+          try {
+            await existingInstance.destroy();
+          } catch (e) {
+            console.warn("Error destroying remaining instance:", e);
+          }
+        }
+      } catch (e) {
+        console.warn("Error cleaning up remaining instances:", e);
       }
 
       isInitializedRef.current = false;
@@ -482,44 +591,53 @@ const VideoRoom: React.FC = () => {
   // Setup room once when component mounts
   useEffect(() => {
     if (roomName && user) {
-      if (location.state?.roomData && (window as any).dailyCallObject) {
-        // Room data and call object available from Dashboard navigation
-        setupRoom();
-      } else {
-        // Direct navigation - redirect back to dashboard
-        console.log(
-          "No room data or call object found, redirecting to dashboard"
-        );
-        message.warning("Please join room from dashboard");
-        // navigate("/dashboard");
-      }
+      // Always attempt to setup room - the setupRoom function will handle
+      // both cases: existing call object (destroy and recreate) or no call object (create new)
+      setupRoom();
     }
-  }, [roomName, user, location.state?.roomData, setupRoom, navigate]);
+  }, [roomName, user, setupRoom]);
 
-  // Cleanup on unmount
-  // useEffect(() => {
-  //   return () => {
-  //     // Cleanup Daily call object
-  //     if (callObjectRef.current) {
-  //       console.log("Cleaning up call object in useEffect...");
-  //       try {
-  //         callObjectRef.current.destroy();
-  //       } catch (e) {
-  //         console.warn("Error destroying call object in cleanup:", e);
-  //       }
-  //       callObjectRef.current = null;
-  //     }
+  // Cleanup on unmount - only destroy when component is actually unmounting
+  useEffect(() => {
+    return () => {
+      // Only destroy the call object when the component is unmounting
+      // This ensures we clean up resources when navigating away from the app
+      console.log("Component unmounting - cleaning up all call objects...");
 
-  //     // Clear global call object
-  //     (window as any).dailyCallObject = null;
+      // Clean up our specific call object
+      if (callObjectRef.current) {
+        try {
+          callObjectRef.current.destroy();
+        } catch (e) {
+          console.warn("Error destroying call object in cleanup:", e);
+        }
+        callObjectRef.current = null;
+      }
 
-  //     // Reset initialization flag
-  //     isInitializedRef.current = false;
+      // Clean up any remaining Daily call object instances
+      try {
+        const existingInstance = Daily.getCallInstance();
+        if (existingInstance) {
+          try {
+            existingInstance.destroy();
+          } catch (e) {
+            console.warn("Error destroying instance in cleanup:", e);
+          }
+        }
+      } catch (e) {
+        console.warn("Error getting call object instance:", e);
+      }
 
-  //     // Clear video refs
-  //     videoRefs.current.clear();
-  //   };
-  // }, []);
+      // Clear global call object
+      (window as any).dailyCallObject = null;
+
+      // Reset initialization flag
+      isInitializedRef.current = false;
+
+      // Clear video refs
+      videoRefs.current.clear();
+    };
+  }, []);
 
   const toggleAudio = useCallback(
     async (e?: React.MouseEvent) => {
@@ -752,7 +870,7 @@ const VideoRoom: React.FC = () => {
       }
 
       try {
-        // Leave the Daily.js call
+        // Leave the Daily.js call (but keep the call object for reuse)
         if (callObjectRef.current) {
           console.log("Leaving Daily call...");
           try {
@@ -761,19 +879,14 @@ const VideoRoom: React.FC = () => {
             console.warn("Error leaving call:", leaveError);
           }
 
-          try {
-            await callObjectRef.current.destroy();
-          } catch (destroyError) {
-            console.warn("Error destroying call object:", destroyError);
-          }
-
-          callObjectRef.current = null;
+          // Don't destroy the call object - keep it for reuse
+          // callObjectRef.current = null; // Don't clear this
         }
 
-        // Clear global call object
-        (window as any).dailyCallObject = null;
+        // Don't clear global call object - keep it for reuse
+        // (window as any).dailyCallObject = null;
 
-        // Reset initialization flag
+        // Reset initialization flag so room can be rejoined
         isInitializedRef.current = false;
 
         // Clear video refs

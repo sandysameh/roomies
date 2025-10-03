@@ -1,15 +1,11 @@
-import { useState, useRef, useCallback } from "react";
+import { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
-import Daily from "@daily-co/daily-js";
 import { App } from "antd";
-import { useAuth } from "../context/AuthContext";
 import { roomsAPI } from "../services/api";
 
 export const useRoomManagement = () => {
-  const { user } = useAuth();
   const navigate = useNavigate();
   const { message } = App.useApp();
-  const callObjectRef = useRef<any>(null);
   const [createLoading, setCreateLoading] = useState(false);
 
   const handleCreateRoom = useCallback(
@@ -42,32 +38,34 @@ export const useRoomManagement = () => {
           throw new Error("Failed to get room");
         }
 
-        // Clean up any existing call object
-        if (callObjectRef.current) {
-          try {
-            await callObjectRef.current.destroy();
-          } catch (e) {
-            console.warn("Error destroying existing call object:", e);
-          }
-          callObjectRef.current = null;
-        }
-
-        // Create Daily call object and join
-        const call = Daily.createCallObject();
-        callObjectRef.current = call;
-
-        await call.join({
-          url: roomResponse.room.url,
-          token: localStorage.getItem("token") || "",
-          userName: user?.name || user?.email || "User",
-          startVideoOff: true, // Start with video off so user can control it
-          startAudioOff: false, // Start with audio on
+        // Navigate to room - let VideoRoom component handle Daily call object lifecycle
+        navigate(`/room/${roomName}`, {
+          state: {
+            roomData: roomResponse.room,
+            token: roomResponse.token,
+          },
         });
 
-        // Store call object globally so VideoRoom can access it
-        (window as any).dailyCallObject = call;
+        message.success(`Joining room: ${roomName}`);
+        return { success: true };
+      } catch (error: any) {
+        console.error("Error joining room:", error);
+        message.error("Failed to join room");
+        return { success: false, error };
+      }
+    },
+    [navigate, message]
+  );
 
-        // Navigate to room with success
+  const handleRouteToRoom = useCallback(
+    async (roomName: string) => {
+      try {
+        const roomResponse = await roomsAPI.getRoom(roomName);
+
+        if (!roomResponse.success) {
+          throw new Error("Failed to get room");
+        }
+
         navigate(`/room/${roomName}`, {
           state: {
             roomData: roomResponse.room,
@@ -81,21 +79,11 @@ export const useRoomManagement = () => {
         console.error("Error joining room:", error);
         message.error("Failed to join room");
 
-        // Clean up on error
-        if (callObjectRef.current) {
-          try {
-            await callObjectRef.current.destroy();
-          } catch (e) {
-            console.warn("Error destroying call object after error:", e);
-          }
-          callObjectRef.current = null;
-        }
         return { success: false, error };
       }
     },
-    [user, navigate, message]
+    [navigate, message]
   );
-
   const handleDeleteRoom = useCallback(
     async (roomName: string) => {
       try {
@@ -114,6 +102,7 @@ export const useRoomManagement = () => {
     createLoading,
     handleCreateRoom,
     handleJoinRoom,
+    handleRouteToRoom,
     handleDeleteRoom,
   };
 };
