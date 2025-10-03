@@ -1,3 +1,8 @@
+export enum AccountType {
+  USER = "User",
+  ADMIN = "Admin",
+}
+
 export interface User {
   id: string;
   name: string;

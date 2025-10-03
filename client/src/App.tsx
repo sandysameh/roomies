@@ -8,8 +8,7 @@ import {
 import { ConfigProvider, App as AntApp } from "antd";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/ProtectedRoute";
-import LoginPage from "./components/LoginPage";
-import Dashboard from "./components/Dashboard";
+import { LoginPage, Dashboard } from "./screens";
 import VideoRoom from "./components/VideoRoom";
 import "./App.css";
 
@@ -39,9 +38,9 @@ const App: React.FC = () => {
               <Route
                 path="/room/:roomName"
                 element={
-                  // <ProtectedRoute>
-                  <VideoRoom />
-                  // </ProtectedRoute>
+                  <ProtectedRoute>
+                    <VideoRoom />
+                  </ProtectedRoute>
                 }
               />
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
