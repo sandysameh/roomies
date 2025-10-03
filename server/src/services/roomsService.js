@@ -23,11 +23,6 @@ const callDailyAPI = async (endpoint, method = "GET", data = null) => {
       config.data = data;
     }
 
-    console.log(`Making Daily API request: ${method} ${config.url}`);
-    if (data) {
-      console.log("Request data:", JSON.stringify(data, null, 2));
-    }
-
     const response = await axios(config);
     return response.data;
   } catch (error) {
@@ -119,13 +114,12 @@ export const roomsService = {
     };
   },
 
-  async getRoomForJoin(roomName, user) {
+  async getRoom(roomName) {
     let storedRoom = rooms.get(roomName);
 
     if (!storedRoom) {
-      const dailyRooms = await callDailyAPI("/rooms");
-      const dailyRoom = dailyRooms.data.find((room) => room.name === roomName);
-
+      const dailyRoom = await callDailyAPI(`/rooms/${roomName}`);
+      console.log("dailyRoom sandy", dailyRoom);
       if (!dailyRoom) {
         const error = new Error("Room not found");
         error.status = 404;

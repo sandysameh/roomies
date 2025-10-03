@@ -25,7 +25,6 @@ class AuthService {
   }
 
   getUserById(userId) {
-    console.log("Getting user by ID:", this.users);
     return this.users.get(userId) || null;
   }
 

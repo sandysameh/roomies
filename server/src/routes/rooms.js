@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.get("/", authenticateToken, roomsController.getAllRooms);
 router.post("/", authenticateToken, requireAdmin, roomsController.createRoom);
-router.get("/:roomName/join", authenticateToken, roomsController.joinRoom);
+router.get("/:roomName", authenticateToken, roomsController.getRoom);
 router.delete(
   "/:roomName",
   authenticateToken,

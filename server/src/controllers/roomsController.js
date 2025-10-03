@@ -40,23 +40,23 @@ export const roomsController = {
     }
   },
 
-  async joinRoom(req, res) {
+  async getRoom(req, res) {
     try {
       const { roomName } = req.params;
-      const result = await roomsService.getRoomForJoin(roomName, req.user);
+      const result = await roomsService.getRoom(roomName);
       res.json({
         success: true,
         ...result,
       });
     } catch (error) {
-      console.error("Error in join endpoint:", error);
+      console.error("Error getting room:", error);
       console.error("Error stack:", error.stack);
 
       if (error.status === 404) {
         res.status(404).json({ error: error.message });
       } else {
         res.status(500).json({
-          error: "Failed to get room access",
+          error: "Failed to get room",
           details: error.message,
         });
       }

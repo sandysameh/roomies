@@ -67,15 +67,15 @@ export const roomsAPI = {
     return response.data;
   },
 
+  getRoom: async (roomName: string): Promise<RoomJoinResponse> => {
+    const response = await api.get(`/rooms/${roomName}`);
+    return response.data;
+  },
+
   createRoom: async (
     roomData: CreateRoomRequest
   ): Promise<{ success: boolean; room: Room }> => {
     const response = await api.post("/rooms", roomData);
-    return response.data;
-  },
-
-  joinRoom: async (roomName: string): Promise<RoomJoinResponse> => {
-    const response = await api.get(`/rooms/${roomName}/join`);
     return response.data;
   },
 

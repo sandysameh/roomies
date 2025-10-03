@@ -1,42 +1,45 @@
 import { useState, useRef, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Daily from "@daily-co/daily-js";
-import { message } from "antd";
+import { App } from "antd";
 import { useAuth } from "../context/AuthContext";
 import { roomsAPI } from "../services/api";
 
 export const useRoomManagement = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const { message } = App.useApp();
   const callObjectRef = useRef<any>(null);
   const [createLoading, setCreateLoading] = useState(false);
 
-  const handleCreateRoom = useCallback(async (values: { name: string }) => {
-    setCreateLoading(true);
-    try {
-      const response = await roomsAPI.createRoom(values);
-      if (response.success) {
-        message.success("Room created successfully!");
-        return { success: true };
+  const handleCreateRoom = useCallback(
+    async (values: { name: string }) => {
+      setCreateLoading(true);
+      try {
+        const response = await roomsAPI.createRoom(values);
+        if (response.success) {
+          message.success("Room created successfully!");
+          return { success: true };
+        }
+        return { success: false };
+      } catch (error: any) {
+        console.error("Error creating room:", error);
+        message.error(error.response?.data?.error || "Failed to create room");
+        return { success: false, error };
+      } finally {
+        setCreateLoading(false);
       }
-      return { success: false };
-    } catch (error: any) {
-      console.error("Error creating room:", error);
-      message.error(error.response?.data?.error || "Failed to create room");
-      return { success: false, error };
-    } finally {
-      setCreateLoading(false);
-    }
-  }, []);
+    },
+    [message]
+  );
 
   const handleJoinRoom = useCallback(
     async (roomName: string) => {
       try {
-        const joinResponse = await roomsAPI.joinRoom(roomName);
-        console.log("Backend join response:", joinResponse);
+        const roomResponse = await roomsAPI.getRoom(roomName);
 
-        if (!joinResponse.success) {
-          throw new Error("Failed to join room");
+        if (!roomResponse.success) {
+          throw new Error("Failed to get room");
         }
 
         // Clean up any existing call object
@@ -54,7 +57,7 @@ export const useRoomManagement = () => {
         callObjectRef.current = call;
 
         await call.join({
-          url: joinResponse.room.url,
+          url: roomResponse.room.url,
           token: localStorage.getItem("token") || "",
           userName: user?.name || user?.email || "User",
           startVideoOff: true, // Start with video off so user can control it
@@ -67,8 +70,8 @@ export const useRoomManagement = () => {
         // Navigate to room with success
         navigate(`/room/${roomName}`, {
           state: {
-            roomData: joinResponse.room,
-            token: joinResponse.token,
+            roomData: roomResponse.room,
+            token: roomResponse.token,
           },
         });
 
@@ -90,18 +93,22 @@ export const useRoomManagement = () => {
         return { success: false, error };
       }
     },
-    [user, navigate]
+    [user, navigate, message]
   );
 
-  const handleDeleteRoom = useCallback(async (roomName: string) => {
-    try {
-      await roomsAPI.deleteRoom(roomName);
-      return { success: true };
-    } catch (error: any) {
-      message.error(error.response?.data?.error || "Failed to delete room");
-      return { success: false, error };
-    }
-  }, []);
+  const handleDeleteRoom = useCallback(
+    async (roomName: string) => {
+      try {
+        await roomsAPI.deleteRoom(roomName);
+        message.success("Room deleted successfully");
+        return { success: true };
+      } catch (error: any) {
+        message.error(error.response?.data?.error || "Failed to delete room");
+        return { success: false, error };
+      }
+    },
+    [message]
+  );
 
   return {
     createLoading,
