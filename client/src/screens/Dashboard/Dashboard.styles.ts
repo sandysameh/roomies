@@ -8,6 +8,7 @@ import {
   BORDER_RADIUS,
   LAYOUT_SIZES,
   COMPONENT_SIZES,
+  BREAKPOINTS,
 } from "../../styles";
 
 const { Header: AntHeader, Content: AntContent } = Layout;
@@ -32,6 +33,15 @@ export const Header = styled(AntHeader)<{ width?: string; height?: string }>`
   justify-content: space-between;
   width: ${(props) => props.width || "100%"};
   height: ${(props) => props.height || LAYOUT_SIZES.header.height};
+
+  /* Mobile responsive */
+  @media (max-width: ${BREAKPOINTS.md}) {
+    padding: 0 ${SPACING.md};
+  }
+
+  @media (max-width: ${BREAKPOINTS.xs}) {
+    padding: 0 ${SPACING.sm};
+  }
 `;
 
 export const Content = styled(AntContent)<{ width?: string; height?: string }>`
@@ -39,6 +49,14 @@ export const Content = styled(AntContent)<{ width?: string; height?: string }>`
   width: ${(props) => props.width || "100%"};
   min-height: ${(props) =>
     props.height || `calc(100vh - ${LAYOUT_SIZES.header.height})`};
+
+  @media (max-width: ${BREAKPOINTS.md}) {
+    padding: ${SPACING.lg};
+  }
+
+  @media (max-width: ${BREAKPOINTS.xs}) {
+    padding: ${SPACING.md};
+  }
 `;
 
 // Header Components
@@ -66,6 +84,21 @@ export const Title = styled(AntTitle)<{ width?: string; height?: string }>`
     color: ${COLORS.text.primary};
     width: ${(props) => props.width || "auto"};
     height: ${(props) => props.height || "auto"};
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (max-width: ${BREAKPOINTS.md}) {
+    &.ant-typography {
+      font-size: ${FONT_SIZES.lg} !important;
+    }
+  }
+
+  @media (max-width: ${BREAKPOINTS.xs}) {
+    &.ant-typography {
+      font-size: ${FONT_SIZES.md} !important;
+    }
   }
 `;
 

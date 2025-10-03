@@ -1,5 +1,6 @@
 import React from "react";
 import { Space, Dropdown, MenuProps } from "antd";
+import { isMobile } from "react-device-detect";
 import {
   PlusOutlined,
   UserOutlined,
@@ -17,6 +18,7 @@ import {
   UserButton,
   UserAvatar,
 } from "./Dashboard.styles";
+import { SPACING } from "../../styles/sizes";
 
 interface User {
   name: string;
@@ -69,8 +71,12 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
       <HeaderActions>
         <Space>
           {user?.isAdmin && (
-            <PrimaryButton icon={<PlusOutlined />} onClick={onCreateRoom}>
-              Create Room
+            <PrimaryButton
+              icon={<PlusOutlined />}
+              onClick={onCreateRoom}
+              width={isMobile ? SPACING.xxxl : "auto"}
+            >
+              {isMobile ? "" : "Create Room"}
             </PrimaryButton>
           )}
 
