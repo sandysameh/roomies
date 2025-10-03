@@ -1,17 +1,9 @@
-/**
- * Utility functions for VideoRoom component
- */
-
 export interface GridLayout {
   columns: string;
   rows: string;
   aspectRatio: string;
 }
 
-/**
- * Calculates the optimal grid layout based on the number of participants
- * Optimized for mobile and desktop views
- */
 export const getGridLayout = (participantCount: number): GridLayout => {
   if (participantCount === 1) {
     return {
@@ -51,4 +43,3 @@ export const getGridLayout = (participantCount: number): GridLayout => {
     };
   }
 };
-

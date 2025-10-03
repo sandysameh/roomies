@@ -8,6 +8,7 @@ import {
   ParticipantCard,
 } from "./VideoRoom.styles";
 import { Participant } from "../../types";
+import { COLORS } from "../../styles";
 
 interface ParticipantsListProps {
   participants: Participant[];
@@ -32,7 +33,11 @@ export const ParticipantsList: React.FC<ParticipantsListProps> = ({
                 avatar={
                   <Badge
                     dot
-                    color={participant.isLocal ? "#52c41a" : "#1890ff"}
+                    color={
+                      participant.isLocal
+                        ? COLORS.success.main
+                        : COLORS.info.main
+                    }
                     offset={[-5, 5]}
                   >
                     <Avatar icon={<UserOutlined />} />
@@ -49,7 +54,6 @@ export const ParticipantsList: React.FC<ParticipantsListProps> = ({
                     <span>
                       {participant.name}
                       {participant.isLocal && " (You)"}
-                      {participant.isOwner && " 👑"}
                     </span>
                   </div>
                 }

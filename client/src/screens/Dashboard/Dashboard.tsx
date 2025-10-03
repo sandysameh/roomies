@@ -29,7 +29,7 @@ interface DashboardProps {
 
 const Dashboard: React.FC<DashboardProps> = ({ width, height }) => {
   const [rooms, setRooms] = useState<Room[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [initialLoading, setInitialLoading] = useState(true);
   const [createModalVisible, setCreateModalVisible] = useState(false);
   const { user, logout } = useAuth();
   const {
@@ -42,25 +42,30 @@ const Dashboard: React.FC<DashboardProps> = ({ width, height }) => {
   const [form] = Form.useForm();
   const { modal } = App.useApp();
 
-  const fetchRooms = async () => {
+  const fetchRooms = async (showLoading = false) => {
     try {
-      setLoading(true);
+      if (showLoading) {
+        setInitialLoading(true);
+      }
       const response = await roomsAPI.getRooms();
       if (response.success) {
         setRooms(response.rooms);
       }
     } catch (error: any) {
       console.error("Error fetching rooms:", error);
-      message.error("Failed to load rooms");
+      if (showLoading) {
+        message.error("Failed to load rooms");
+      }
     } finally {
-      setLoading(false);
+      if (showLoading) {
+        setInitialLoading(false);
+      }
     }
   };
 
   useEffect(() => {
-    fetchRooms();
-    // Refresh room list every 10 seconds to update participant counts
-    const interval = setInterval(fetchRooms, 10000);
+    fetchRooms(true);
+    const interval = setInterval(() => fetchRooms(false), 20000);
     return () => clearInterval(interval);
   }, []);
 
@@ -69,7 +74,7 @@ const Dashboard: React.FC<DashboardProps> = ({ width, height }) => {
     if (result.success) {
       setCreateModalVisible(false);
       form.resetFields();
-      fetchRooms(); // Refresh the room list
+      fetchRooms(false); // Refresh without loading spinner
     }
   };
 
@@ -88,7 +93,7 @@ const Dashboard: React.FC<DashboardProps> = ({ width, height }) => {
       onOk: async () => {
         const result = await handleDeleteRoom(roomName);
         if (result.success) {
-          fetchRooms();
+          fetchRooms(false); // Refresh without loading spinner
         }
       },
     });
@@ -134,7 +139,7 @@ const Dashboard: React.FC<DashboardProps> = ({ width, height }) => {
             </ContentDescription>
           </ContentHeader>
 
-          {loading ? (
+          {initialLoading ? (
             <LoadingContainer>
               <Spin size="large" />
             </LoadingContainer>

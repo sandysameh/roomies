@@ -44,7 +44,6 @@ export const VideoGrid: React.FC<VideoGridProps> = ({
       $rows={gridLayout.rows}
       $isFullscreen={isFullscreen}
     >
-      {/* Local participant video */}
       {localParticipant && (
         <ParticipantVideo
           participant={localParticipant}
@@ -53,7 +52,6 @@ export const VideoGrid: React.FC<VideoGridProps> = ({
         />
       )}
 
-      {/* Remote participants videos */}
       {remoteParticipants.map((participant) => (
         <ParticipantVideo
           key={participant.id}
@@ -63,7 +61,6 @@ export const VideoGrid: React.FC<VideoGridProps> = ({
         />
       ))}
 
-      {/* Empty state when alone */}
       {participantCount === 1 && (
         <EmptyStateOverlay>
           <UserOutlined
