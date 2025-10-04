@@ -32,13 +32,17 @@ export const useParticipants = (options: UseParticipantsOptions = {}) => {
           ? userName
           : p.user_name || p.user_id || "Unknown User";
 
+        // Check the actual track state, not just if the track exists
+        const audioEnabled = p.tracks?.audio?.state === "playable";
+        const videoEnabled = p.tracks?.video?.state === "playable";
+
         return {
           id: p.session_id,
           name: participantName,
           email: p.local ? userEmail : p.user_id || "",
           isLocal: p.local,
-          audioEnabled: p.audio,
-          videoEnabled: p.video,
+          audioEnabled,
+          videoEnabled,
           isOwner: p.owner || false,
           joinedAt: new Date().toISOString(),
         };

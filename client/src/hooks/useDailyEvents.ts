@@ -39,10 +39,14 @@ export const useDailyEvents = (options: UseDailyEventsOptions) => {
         onParticipantUpdate(call);
 
         if (event.participant.local) {
-          onLocalMediaUpdate(event.participant.audio, event.participant.video);
+          // Check the actual track state, not just permissions
+          const audioEnabled = event.participant.tracks?.audio?.state === "playable";
+          const videoEnabled = event.participant.tracks?.video?.state === "playable";
+          
+          onLocalMediaUpdate(audioEnabled, videoEnabled);
 
           // Handle local video updates
-          if (event.participant.video) {
+          if (videoEnabled) {
             setTimeout(() => {
               try {
                 const localVideoStream = call.localVideo();
@@ -84,7 +88,10 @@ export const useDailyEvents = (options: UseDailyEventsOptions) => {
       });
 
       call.on("track-stopped", (event: any) => {
-        onTrackStopped(event.participant.session_id);
+        // Only clear video elements when video tracks stop, not audio tracks
+        if (event.track.kind === "video") {
+          onTrackStopped(event.participant.session_id);
+        }
       });
 
       // Meeting state events
@@ -92,7 +99,10 @@ export const useDailyEvents = (options: UseDailyEventsOptions) => {
         onParticipantUpdate(call);
         const localParticipant = call.participants().local;
         if (localParticipant) {
-          onLocalMediaUpdate(localParticipant.audio, localParticipant.video);
+          // Check the actual track state, not just permissions
+          const audioEnabled = localParticipant.tracks?.audio?.state === "playable";
+          const videoEnabled = localParticipant.tracks?.video?.state === "playable";
+          onLocalMediaUpdate(audioEnabled, videoEnabled);
         }
       });
 
