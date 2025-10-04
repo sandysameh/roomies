@@ -130,9 +130,14 @@ const Dashboard: React.FC<DashboardProps> = ({ width, height }) => {
           <ContentHeader>
             <ContentTitle level={2}>Available Rooms</ContentTitle>
             <ContentDescription type="secondary">
-              <div>
-                <b>PS: Participant Take time to update</b>
-              </div>
+              {rooms.length > 0 && (
+                <div>
+                  <b>
+                    PS: The Number of Participants in the Room Take time to
+                    update
+                  </b>
+                </div>
+              )}
               {user?.isAdmin
                 ? "Create new rooms or join existing ones"
                 : "Join any available room to start video calling"}

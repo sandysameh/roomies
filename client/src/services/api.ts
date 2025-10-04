@@ -11,7 +11,6 @@ import {
 const API_BASE_URL =
   process.env.REACT_APP_API_URL || "http://localhost:5000/api";
 
-// Create axios instance
 const api = axios.create({
   baseURL: API_BASE_URL,
   headers: {
@@ -19,7 +18,6 @@ const api = axios.create({
   },
 });
 
-// Add auth token to requests
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");
   if (token) {
@@ -28,7 +26,6 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Handle auth errors
 api.interceptors.response.use(
   (response) => response,
   (error) => {
@@ -54,11 +51,6 @@ export const authAPI = {
     const response = await api.get("/auth/me");
     return response.data;
   },
-
-  logout: async (): Promise<{ success: boolean; message: string }> => {
-    const response = await api.post("/auth/logout");
-    return response.data;
-  },
 };
 
 export const roomsAPI = {
@@ -76,38 +68,6 @@ export const roomsAPI = {
     roomData: CreateRoomRequest
   ): Promise<{ success: boolean; room: Room }> => {
     const response = await api.post("/rooms", roomData);
-    return response.data;
-  },
-
-  leaveRoom: async (roomName: string): Promise<{ success: boolean }> => {
-    const response = await api.post(`/rooms/${roomName}/leave`);
-    return response.data;
-  },
-
-  getParticipants: async (
-    roomName: string
-  ): Promise<{ success: boolean; participants: any[] }> => {
-    const response = await api.get(`/rooms/${roomName}/participants`);
-    return response.data;
-  },
-
-  updateParticipantAudio: async (
-    roomName: string,
-    audioEnabled: boolean
-  ): Promise<{ success: boolean }> => {
-    const response = await api.patch(`/rooms/${roomName}/audio`, {
-      audioEnabled,
-    });
-    return response.data;
-  },
-
-  updateParticipantVideo: async (
-    roomName: string,
-    videoEnabled: boolean
-  ): Promise<{ success: boolean }> => {
-    const response = await api.patch(`/rooms/${roomName}/video`, {
-      videoEnabled,
-    });
     return response.data;
   },
 
