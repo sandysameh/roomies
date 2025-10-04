@@ -40,11 +40,9 @@ export const useDailyEvents = (options: UseDailyEventsOptions) => {
 
         if (event.participant.local) {
           // Check the actual track state, not just permissions
-          const audioEnabled =
-            event.participant.tracks?.audio?.state === "playable";
-          const videoEnabled =
-            event.participant.tracks?.video?.state === "playable";
-
+          const audioEnabled = event.participant.tracks?.audio?.state === "playable";
+          const videoEnabled = event.participant.tracks?.video?.state === "playable";
+          
           onLocalMediaUpdate(audioEnabled, videoEnabled);
 
           // Handle local video updates
@@ -102,10 +100,8 @@ export const useDailyEvents = (options: UseDailyEventsOptions) => {
         const localParticipant = call.participants().local;
         if (localParticipant) {
           // Check the actual track state, not just permissions
-          const audioEnabled =
-            localParticipant.tracks?.audio?.state === "playable";
-          const videoEnabled =
-            localParticipant.tracks?.video?.state === "playable";
+          const audioEnabled = localParticipant.tracks?.audio?.state === "playable";
+          const videoEnabled = localParticipant.tracks?.video?.state === "playable";
           onLocalMediaUpdate(audioEnabled, videoEnabled);
         }
       });
