@@ -22,7 +22,12 @@ import {
   RoomsGrid,
 } from "./Dashboard.styles";
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  width?: string;
+  height?: string;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({ width, height }) => {
   const [rooms, setRooms] = useState<Room[]>([]);
   const [initialLoading, setInitialLoading] = useState(true);
   const [createModalVisible, setCreateModalVisible] = useState(false);
@@ -113,7 +118,7 @@ const Dashboard: React.FC = () => {
   }
 
   return (
-    <DashboardLayout>
+    <DashboardLayout width={width} height={height}>
       <DashboardHeader
         user={user}
         onCreateRoom={handleOpenCreateModal}

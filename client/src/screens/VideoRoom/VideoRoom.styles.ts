@@ -1,12 +1,10 @@
 import styled from "styled-components";
 import { Layout, Card, Button, Typography } from "antd";
 import {
-  COLORS,
   SPACING,
   FONT_SIZES,
   FONT_WEIGHTS,
   BORDER_RADIUS,
-  LAYOUT_SIZES,
   BREAKPOINTS,
   ANIMATION,
   Z_INDEX,
@@ -23,12 +21,12 @@ export const VideoRoomLayout = styled(Layout)`
 
 // Header
 export const VideoRoomHeader = styled(AntHeader)`
-  background: ${COLORS.neutral.gray900};
+  background: #001529;
   padding: 0 ${SPACING.xxl};
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: ${LAYOUT_SIZES.header.height};
+  height: 64px;
   z-index: ${Z_INDEX.sticky};
 
   @media (max-width: ${BREAKPOINTS.md}) {
@@ -47,6 +45,7 @@ export const HeaderLeft = styled.div`
   flex: 1;
   min-width: 0;
 
+  /* Hide button text on mobile, keep icon only */
   @media (max-width: ${BREAKPOINTS.sm}) {
     .ant-btn-text span:not(.anticon) {
       display: none;
@@ -66,7 +65,7 @@ export const HeaderRight = styled.div`
 
 export const RoomTitle = styled.h4`
   margin: 0;
-  color: ${COLORS.neutral.white};
+  color: white;
   font-size: ${FONT_SIZES.lg};
   font-weight: ${FONT_WEIGHTS.medium};
   white-space: nowrap;
@@ -85,12 +84,12 @@ export const RoomTitle = styled.h4`
 
 export const ParticipantCount = styled.span`
   display: none;
-  color: ${COLORS.text.inverseLight};
+  color: rgba(255, 255, 255, 0.85);
   font-size: ${FONT_SIZES.sm};
   font-weight: ${FONT_WEIGHTS.normal};
   margin-left: ${SPACING.sm};
-  background: ${COLORS.background.overlayLight};
-  padding: ${SPACING.xs} ${SPACING.sm};
+  background: rgba(255, 255, 255, 0.1);
+  padding: 2px 8px;
   border-radius: ${BORDER_RADIUS.sm};
 
   @media (max-width: ${BREAKPOINTS.md}) {
@@ -112,16 +111,16 @@ export const CallControlsContainer = styled.div`
 export const ControlButton = styled(Button)<{ $isActive?: boolean }>`
   &.ant-btn {
     border-radius: ${BORDER_RADIUS.full};
-    width: ${SPACING.xxxxxl};
-    height: ${SPACING.xxxxxl};
+    width: 48px;
+    height: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all ${ANIMATION.duration.normal} ${ANIMATION.easing.easeInOut};
 
     @media (max-width: ${BREAKPOINTS.sm}) {
-      width: ${SPACING.xxxxl};
-      height: ${SPACING.xxxxl};
+      width: 40px;
+      height: 40px;
     }
 
     &:hover {
@@ -137,8 +136,9 @@ export const ControlButton = styled(Button)<{ $isActive?: boolean }>`
 // Content Area
 export const VideoContent = styled(AntContent)<{ $participantCount: number }>`
   padding: ${(props) => (props.$participantCount === 1 ? "0" : SPACING.lg)};
-  background: ${COLORS.neutral.black};
+  background: #0f0f0f;
   overflow: hidden;
+  width: 100%;
 
   @media (max-width: ${BREAKPOINTS.md}) {
     padding: ${(props) => (props.$participantCount === 1 ? "0" : SPACING.md)};
@@ -156,9 +156,7 @@ export const VideoGrid = styled.div<{
   $isFullscreen: boolean;
 }>`
   height: ${(props) =>
-    props.$isFullscreen
-      ? `calc(100vh - ${LAYOUT_SIZES.header.height})`
-      : `calc(100vh - ${LAYOUT_SIZES.header.height} - ${SPACING.xxxl})`};
+    props.$isFullscreen ? "calc(100vh - 64px)" : "calc(100vh - 96px)"};
   display: grid;
   grid-template-columns: ${(props) => props.$columns};
   grid-template-rows: ${(props) => props.$rows};
@@ -169,14 +167,17 @@ export const VideoGrid = styled.div<{
   @media (max-width: ${BREAKPOINTS.md}) {
     gap: ${(props) => (props.$isFullscreen ? "0" : SPACING.sm)};
     padding: ${(props) => (props.$isFullscreen ? "0" : SPACING.sm)};
+    height: ${(props) =>
+      props.$isFullscreen ? "calc(100vh - 64px)" : "calc(100vh - 88px)"};
   }
 
   @media (max-width: ${BREAKPOINTS.sm}) {
+    /* Single column layout on mobile - videos stack vertically */
     grid-template-columns: 1fr !important;
     grid-template-rows: auto !important;
     gap: ${SPACING.sm};
     overflow-y: auto;
-    height: calc(100vh - ${LAYOUT_SIZES.header.height});
+    height: calc(100vh - 64px);
     padding: ${SPACING.sm};
   }
 `;
@@ -186,7 +187,7 @@ export const ParticipantVideoContainer = styled.div<{ $isFullscreen: boolean }>`
   position: relative;
   width: 100%;
   height: 100%;
-  background-color: ${COLORS.neutral.gray800};
+  background-color: #1a1a1a;
   border-radius: ${(props) => (props.$isFullscreen ? "0" : BORDER_RADIUS.lg)};
   overflow: hidden;
   display: flex;
@@ -194,12 +195,12 @@ export const ParticipantVideoContainer = styled.div<{ $isFullscreen: boolean }>`
   justify-content: center;
   cursor: pointer;
   transition: all ${ANIMATION.duration.normal} ${ANIMATION.easing.easeInOut};
+  border: none;
   box-shadow: ${(props) =>
-    props.$isFullscreen
-      ? "none"
-      : `0 ${SPACING.xs} ${SPACING.sm} ${COLORS.shadow.primary}`};
+    props.$isFullscreen ? "none" : "0 2px 8px rgba(0,0,0,0.15)"};
 
   @media (max-width: ${BREAKPOINTS.sm}) {
+    /* Mobile: Each video tile takes full width and has fixed aspect ratio */
     min-height: 280px;
     max-height: 400px;
     aspect-ratio: 16/9;
@@ -210,13 +211,12 @@ export const ParticipantVideoContainer = styled.div<{ $isFullscreen: boolean }>`
   &:hover {
     transform: ${(props) => (props.$isFullscreen ? "none" : "scale(1.02)")};
     box-shadow: ${(props) =>
-      props.$isFullscreen
-        ? "none"
-        : `0 ${SPACING.xs} ${SPACING.lg} ${COLORS.shadow.hover}`};
+      props.$isFullscreen ? "none" : "0 4px 16px rgba(0,0,0,0.25)"};
 
     @media (max-width: ${BREAKPOINTS.sm}) {
+      /* Disable hover effects on mobile */
       transform: none;
-      box-shadow: 0 ${SPACING.xs} ${SPACING.sm} ${COLORS.shadow.primary};
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
   }
 `;
@@ -243,7 +243,7 @@ export const VideoDisabledOverlay = styled.div<{ $isFullscreen: boolean }>`
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: ${COLORS.neutral.gray700};
+  background-color: #2a2a2a;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -263,12 +263,11 @@ export const ParticipantInfoOverlay = styled.div<{ $isFullscreen: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: ${COLORS.background.overlayDark};
-  padding: ${(props) =>
-    props.$isFullscreen ? `${SPACING.sm} ${SPACING.md}` : SPACING.sm};
+  background: rgba(0, 0, 0, 0.6);
+  padding: ${(props) => (props.$isFullscreen ? "8px 12px" : "6px 8px")};
   border-radius: ${BORDER_RADIUS.md};
-  backdrop-filter: blur(${SPACING.xs});
-  border: 1px solid ${COLORS.border.light};
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 
   @media (max-width: ${BREAKPOINTS.sm}) {
     bottom: ${SPACING.sm};
@@ -280,7 +279,7 @@ export const ParticipantInfoOverlay = styled.div<{ $isFullscreen: boolean }>`
 
 export const ParticipantName = styled(AntText)<{ $isFullscreen: boolean }>`
   &.ant-typography {
-    color: ${COLORS.neutral.white};
+    color: white;
     font-size: ${(props) =>
       props.$isFullscreen ? FONT_SIZES.base : FONT_SIZES.sm};
     font-weight: ${FONT_WEIGHTS.medium};
@@ -305,11 +304,11 @@ export const EmptyStateOverlay = styled.div`
   transform: translate(-50%, -50%);
   text-align: center;
   z-index: ${Z_INDEX.sticky};
-  background: ${COLORS.background.overlayDark};
+  background: rgba(0, 0, 0, 0.7);
   padding: ${SPACING.xxl} ${SPACING.xxxl};
   border-radius: ${BORDER_RADIUS.lg};
-  backdrop-filter: blur(${SPACING.sm});
-  border: 1px solid ${COLORS.border.light};
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 
   @media (max-width: ${BREAKPOINTS.sm}) {
     padding: ${SPACING.lg} ${SPACING.xl};
@@ -320,7 +319,7 @@ export const EmptyStateOverlay = styled.div`
 
 export const EmptyStateText = styled(AntText)`
   &.ant-typography {
-    color: ${COLORS.neutral.white};
+    color: white;
     font-size: ${FONT_SIZES.md};
 
     @media (max-width: ${BREAKPOINTS.sm}) {
@@ -332,7 +331,7 @@ export const EmptyStateText = styled(AntText)`
 // Participants Sidebar
 export const ParticipantsSider = styled(AntSider)`
   &.ant-layout-sider {
-    background: ${COLORS.background.primary};
+    background: white;
 
     @media (max-width: ${BREAKPOINTS.md}) {
       display: none;
@@ -356,7 +355,6 @@ export const ParticipantListTitle = styled.h5`
   margin: 0 0 ${SPACING.lg} 0;
   font-size: ${FONT_SIZES.md};
   font-weight: ${FONT_WEIGHTS.semibold};
-  color: ${COLORS.text.primary};
 
   @media (max-width: ${BREAKPOINTS.sm}) {
     font-size: ${FONT_SIZES.base};
@@ -365,12 +363,13 @@ export const ParticipantListTitle = styled.h5`
 
 export const ParticipantCard = styled(Card)`
   &.ant-card {
+    width: 100%;
     margin-bottom: ${SPACING.md};
     border-radius: ${BORDER_RADIUS.md};
     transition: all ${ANIMATION.duration.normal} ${ANIMATION.easing.easeInOut};
 
     &:hover {
-      box-shadow: 0 ${SPACING.xs} ${SPACING.sm} ${COLORS.shadow.primary};
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     @media (max-width: ${BREAKPOINTS.sm}) {
@@ -386,13 +385,13 @@ export const LoadingContainer = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  background: ${COLORS.neutral.black};
+  background: #0f0f0f;
 `;
 
 export const LoadingText = styled(AntText)`
   &.ant-typography {
     margin-top: ${SPACING.lg};
     font-size: ${FONT_SIZES.md};
-    color: ${COLORS.neutral.white};
+    color: white;
   }
 `;

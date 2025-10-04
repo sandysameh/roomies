@@ -60,7 +60,7 @@ const DashboardHeader: React.FC<DashboardHeaderProps> = ({
   ];
 
   return (
-    <Header>
+    <Header width={width} height={height}>
       <LogoContainer>
         <LogoIcon>
           <VideoCameraOutlined />

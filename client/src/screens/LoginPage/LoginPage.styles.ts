@@ -1,6 +1,12 @@
 import styled from "styled-components";
 import { Card, Typography } from "antd";
-import { BORDER_RADIUS, COLORS, FONT_SIZES, SPACING } from "../../styles";
+import {
+  BORDER_RADIUS,
+  COLORS,
+  FONT_SIZES,
+  FONT_WEIGHTS,
+  SPACING,
+} from "../../styles";
 
 const { Title, Text } = Typography;
 
@@ -16,8 +22,8 @@ export const LoginContainer = styled.div`
 export const LoginCard = styled(Card)`
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 ${SPACING.sm} ${SPACING.xxxl} ${COLORS.shadow.primary};
-  border-radius: ${BORDER_RADIUS.xl};
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+  border-radius: 16px;
 
   .ant-card-body {
     padding: ${SPACING.xxxxxl};
@@ -45,7 +51,6 @@ export const AppTitle = styled(Title)`
 export const AppSubtitle = styled(Text)`
   &.ant-typography {
     font-size: ${FONT_SIZES.md};
-    color: ${COLORS.text.secondary};
   }
 `;
 
@@ -62,4 +67,17 @@ export const AccountTypeContainer = styled.div`
 export const AccountTypeInfo = styled.div`
   display: flex;
   flex-direction: column;
+  gap: 0;
+`;
+
+export const AccountTypeLabel = styled(Text)`
+  &.ant-typography {
+    font-weight: ${FONT_WEIGHTS.semibold};
+  }
+`;
+
+export const AccountTypeDescription = styled(Text)`
+  &.ant-typography {
+    font-size: ${FONT_SIZES.sm};
+  }
 `;
