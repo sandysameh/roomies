@@ -15,26 +15,20 @@ const { Header: AntHeader, Content: AntContent } = Layout;
 const { Title: AntTitle, Text: AntText } = Typography;
 
 // Main Layout Components
-export const DashboardLayout = styled(Layout)<{
-  width?: string;
-  height?: string;
-}>`
-  min-height: ${(props) => props.height || "100vh"};
-  width: ${(props) => props.width || "100%"};
+export const DashboardLayout = styled(Layout)`
+  min-height: 100vh;
   background: ${COLORS.background.secondary};
 `;
 
-export const Header = styled(AntHeader)<{ width?: string; height?: string }>`
+export const Header = styled(AntHeader)`
   background: ${COLORS.background.primary};
   padding: 0 ${SPACING.xxl};
-  box-shadow: 0 2px 8px ${COLORS.shadow.primary};
+  box-shadow: 0 ${SPACING.xs} ${SPACING.sm} ${COLORS.shadow.primary};
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || LAYOUT_SIZES.header.height};
+  height: ${LAYOUT_SIZES.header.height};
 
-  /* Mobile responsive */
   @media (max-width: ${BREAKPOINTS.md}) {
     padding: 0 ${SPACING.md};
   }
@@ -44,11 +38,9 @@ export const Header = styled(AntHeader)<{ width?: string; height?: string }>`
   }
 `;
 
-export const Content = styled(AntContent)<{ width?: string; height?: string }>`
+export const Content = styled(AntContent)`
   padding: ${SPACING.xxl};
-  width: ${(props) => props.width || "100%"};
-  min-height: ${(props) =>
-    props.height || `calc(100vh - ${LAYOUT_SIZES.header.height})`};
+  min-height: calc(100vh - ${LAYOUT_SIZES.header.height});
 
   @media (max-width: ${BREAKPOINTS.md}) {
     padding: ${SPACING.lg};
@@ -60,30 +52,24 @@ export const Content = styled(AntContent)<{ width?: string; height?: string }>`
 `;
 
 // Header Components
-export const LogoContainer = styled.div<{ width?: string; height?: string }>`
+export const LogoContainer = styled.div`
   display: flex;
   align-items: center;
-  width: ${(props) => props.width || "auto"};
-  height: ${(props) => props.height || "100%"};
 `;
 
-export const LogoIcon = styled.div<{ width?: string; height?: string }>`
+export const LogoIcon = styled.div`
   font-size: ${FONT_SIZES.xxl};
   color: ${COLORS.primary.main};
   margin-right: ${SPACING.md};
-  width: ${(props) => props.width || FONT_SIZES.xxl};
-  height: ${(props) => props.height || FONT_SIZES.xxl};
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-export const Title = styled(AntTitle)<{ width?: string; height?: string }>`
+export const Title = styled(AntTitle)`
   &.ant-typography {
     margin: 0;
     color: ${COLORS.text.primary};
-    width: ${(props) => props.width || "auto"};
-    height: ${(props) => props.height || "auto"};
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -102,215 +88,135 @@ export const Title = styled(AntTitle)<{ width?: string; height?: string }>`
   }
 `;
 
-export const HeaderActions = styled.div<{ width?: string; height?: string }>`
+export const HeaderActions = styled.div`
   display: flex;
   align-items: center;
   gap: ${SPACING.lg};
-  width: ${(props) => props.width || "auto"};
-  height: ${(props) => props.height || "100%"};
 `;
 
-export const UserButton = styled(Button)<{ width?: string; height?: string }>`
+export const UserButton = styled(Button)`
   &.ant-btn {
     display: flex;
     align-items: center;
-    width: ${(props) => props.width || "auto"};
-    height: ${(props) => props.height || "32px"};
+    height: ${COMPONENT_SIZES.avatar.medium};
   }
 `;
 
-export const UserAvatar = styled(Avatar)<{ width?: string; height?: string }>`
-  margin-right: 8px;
-  width: ${(props) => props.width || "32px"};
-  height: ${(props) => props.height || "32px"};
+export const UserAvatar = styled(Avatar)`
+  margin-right: ${SPACING.sm};
 `;
 
 // Content Components
-export const ContentContainer = styled.div<{ width?: string; height?: string }>`
-  max-width: 1200px;
+export const ContentContainer = styled.div`
+  max-width: ${LAYOUT_SIZES.container.maxWidth};
   margin: 0 auto;
-  width: ${(props) => props.width || "100%"};
-  min-height: ${(props) => props.height || "auto"};
 `;
 
-export const ContentHeader = styled.div<{ width?: string; height?: string }>`
-  margin-bottom: 24px;
-  width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || "auto"};
+export const ContentHeader = styled.div`
+  margin-bottom: ${SPACING.xxl};
 `;
 
-export const ContentTitle = styled(AntTitle)<{
-  width?: string;
-  height?: string;
-}>`
+export const ContentTitle = styled(AntTitle)``;
+
+export const ContentDescription = styled(AntText)`
   &.ant-typography {
-    width: ${(props) => props.width || "100%"};
-    height: ${(props) => props.height || "auto"};
-  }
-`;
-
-export const ContentDescription = styled(AntText)<{
-  width?: string;
-  height?: string;
-  fontSize?: string;
-  fontWeight?: string | number;
-  color?: string;
-}>`
-  &.ant-typography {
-    width: ${(props) => props.width || "100%"};
-    height: ${(props) => props.height || "auto"};
-    font-size: ${(props) => props.fontSize || FONT_SIZES.base};
-    font-weight: ${(props) => props.fontWeight || FONT_WEIGHTS.normal};
-    color: ${(props) => props.color || COLORS.text.secondary};
+    color: ${COLORS.text.secondary};
   }
 `;
 
 // Loading and Empty States
-export const LoadingContainer = styled.div<{ width?: string; height?: string }>`
+export const LoadingContainer = styled.div`
   text-align: center;
   padding: ${SPACING.xxxxxxl};
-  width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || "auto"};
 `;
 
-export const EmptyContainer = styled.div<{ width?: string; height?: string }>`
-  width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || "auto"};
-`;
+export const EmptyContainer = styled.div``;
 
 // Room Grid
-export const RoomsGrid = styled.div<{ width?: string; height?: string }>`
+export const RoomsGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(
     auto-fill,
     minmax(${LAYOUT_SIZES.card.minWidth}, 1fr)
   );
   gap: ${SPACING.xxl};
-  width: ${(props) => props.width || "100%"};
-  min-height: ${(props) => props.height || "auto"};
 `;
 
 // Room Card Components
-export const RoomCard = styled(Card)<{ width?: string; height?: string }>`
+export const RoomCard = styled(Card)`
   &.ant-card {
     border-radius: ${BORDER_RADIUS.lg};
-    width: ${(props) => props.width || "100%"};
-    height: ${(props) => props.height || "auto"};
   }
 `;
 
-export const RoomCardMeta = styled.div<{ width?: string; height?: string }>`
-  width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || "auto"};
-`;
+export const RoomCardMeta = styled.div``;
 
-export const RoomAvatar = styled(Avatar)<{ width?: string; height?: string }>`
+export const RoomAvatar = styled(Avatar)`
   background-color: ${COLORS.primary.main};
-  width: ${(props) => props.width || "40px"};
-  height: ${(props) => props.height || "40px"};
 `;
 
-export const RoomTitleContainer = styled.div<{
-  width?: string;
-  height?: string;
-}>`
+export const RoomTitleContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || "auto"};
 `;
 
-export const RoomTitle = styled.span<{ width?: string; height?: string }>`
+export const RoomTitle = styled.span`
   text-transform: capitalize;
-  width: ${(props) => props.width || "auto"};
-  height: ${(props) => props.height || "auto"};
 `;
 
-export const RoomDescription = styled.div<{ width?: string; height?: string }>`
-  width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || "auto"};
-`;
+export const RoomDescription = styled.div``;
 
-export const ParticipantInfo = styled.div<{ width?: string; height?: string }>`
+export const ParticipantInfo = styled.div`
   display: flex;
   align-items: center;
-  width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || "auto"};
 `;
 
-export const ParticipantIcon = styled.div<{ width?: string; height?: string }>`
+export const ParticipantIcon = styled.div`
   margin-right: ${SPACING.xs};
   color: ${COLORS.text.tertiary};
-  width: ${(props) => props.width || COMPONENT_SIZES.icon.small};
-  height: ${(props) => props.height || COMPONENT_SIZES.icon.small};
+  width: ${COMPONENT_SIZES.icon.small};
+  height: ${COMPONENT_SIZES.icon.small};
   display: flex;
   align-items: center;
   justify-content: center;
 `;
 
-export const ParticipantText = styled(AntText)<{
-  width?: string;
-  height?: string;
-  fontSize?: string;
-  fontWeight?: string | number;
-  color?: string;
-}>`
+export const ParticipantText = styled(AntText)`
   &.ant-typography {
-    width: ${(props) => props.width || "auto"};
-    height: ${(props) => props.height || "auto"};
-    font-size: ${(props) => props.fontSize || FONT_SIZES.base};
-    font-weight: ${(props) => props.fontWeight || FONT_WEIGHTS.normal};
-    color: ${(props) => props.color || COLORS.text.secondary};
+    color: ${COLORS.text.secondary};
   }
 `;
 
-export const RoomDate = styled(AntText)<{
-  width?: string;
-  height?: string;
-  fontSize?: string;
-  fontWeight?: string | number;
-  color?: string;
-}>`
+export const RoomDate = styled(AntText)`
   &.ant-typography {
-    width: ${(props) => props.width || "auto"};
-    height: ${(props) => props.height || "auto"};
-    font-size: ${(props) => props.fontSize || FONT_SIZES.sm};
-    font-weight: ${(props) => props.fontWeight || FONT_WEIGHTS.normal};
-    color: ${(props) => props.color || COLORS.text.secondary};
+    font-size: ${FONT_SIZES.sm};
+    color: ${COLORS.text.secondary};
   }
 `;
 
-export const DeleteButton = styled(Button)<{ width?: string; height?: string }>`
+export const DeleteButton = styled(Button)`
   &.ant-btn {
     color: ${COLORS.error.main};
     font-size: ${FONT_SIZES.md};
-    width: ${(props) => props.width || "auto"};
-    height: ${(props) => props.height || COMPONENT_SIZES.button.medium.height};
+    height: ${COMPONENT_SIZES.button.medium.height};
   }
 `;
 
 // Modal Components
-export const ModalForm = styled.div<{ width?: string; height?: string }>`
+export const ModalForm = styled.div`
   margin-top: ${SPACING.xl};
-  width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || "auto"};
 `;
 
-export const ModalActions = styled.div<{ width?: string; height?: string }>`
-  width: 100%;
-  justify-content: flex-end;
-  margin-bottom: 0;
-  margin-top: ${SPACING.xxl};
+export const ModalActions = styled.div`
   display: flex;
+  justify-content: flex-end;
   gap: ${SPACING.sm};
-  width: ${(props) => props.width || "100%"};
-  height: ${(props) => props.height || "auto"};
+  margin-top: ${SPACING.xxl};
 `;
 
-export const CancelButton = styled(Button)<{ width?: string; height?: string }>`
+export const CancelButton = styled(Button)`
   &.ant-btn {
-    width: ${(props) => props.width || "auto"};
-    height: ${(props) => props.height || COMPONENT_SIZES.button.medium.height};
+    height: ${COMPONENT_SIZES.button.medium.height};
   }
 `;

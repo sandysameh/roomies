@@ -8,9 +8,9 @@ import {
   LoginContainer,
   LoginCard,
   HeaderContainer,
-  AppSubtitle,
   AppTitle,
   LogoIcon,
+  AppSubtitle,
 } from "./LoginPage.styles";
 import { VideoCameraOutlined } from "@ant-design/icons";
 import LoginForm from "./LoginForm";
@@ -50,9 +50,7 @@ const LoginPage: React.FC = () => {
             <VideoCameraOutlined />
           </LogoIcon>
           <AppTitle level={2}>Roomies</AppTitle>
-          <AppSubtitle type="secondary">
-            Connect with your team through video
-          </AppSubtitle>
+          <AppSubtitle>Connect with your team through video</AppSubtitle>
         </HeaderContainer>
         <LoginForm form={form} loading={loading} onSubmit={handleSubmit} />
       </LoginCard>
