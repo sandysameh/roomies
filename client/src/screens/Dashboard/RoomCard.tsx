@@ -26,8 +26,6 @@ interface RoomCardProps {
   isAdmin: boolean;
   onJoinRoom: (roomName: string) => void;
   onDeleteRoom: (roomName: string) => void;
-  width?: string;
-  height?: string;
 }
 
 const RoomCard: React.FC<RoomCardProps> = ({
@@ -35,8 +33,6 @@ const RoomCard: React.FC<RoomCardProps> = ({
   isAdmin,
   onJoinRoom,
   onDeleteRoom,
-  width,
-  height,
 }) => {
   const cardActions = [
     <PrimaryButton
@@ -67,12 +63,7 @@ const RoomCard: React.FC<RoomCardProps> = ({
   ];
 
   return (
-    <StyledRoomCard
-      hoverable
-      actions={cardActions}
-      width={width}
-      height={height}
-    >
+    <StyledRoomCard hoverable actions={cardActions}>
       <StyledRoomCard.Meta
         avatar={<RoomAvatar icon={<VideoCameraOutlined />} />}
         title={

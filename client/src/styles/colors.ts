@@ -67,6 +67,8 @@ export const COLORS = {
     secondary: "#f5f5f5",
     tertiary: "#fafafa",
     overlay: "rgba(0, 0, 0, 0.45)",
+    overlayDark: "rgba(0, 0, 0, 0.6)",
+    overlayLight: "rgba(255, 255, 255, 0.1)",
     disabled: "#d9d9d9",
   },
 
@@ -76,6 +78,7 @@ export const COLORS = {
     secondary: "#6b7280",
     tertiary: "#9ca3af",
     inverse: "#ffffff",
+    inverseLight: "rgba(255, 255, 255, 0.85)",
     disabled: "rgba(0, 0, 0, 0.25)",
     link: "#667eea",
     linkHover: "#5a6fd8",
@@ -85,6 +88,7 @@ export const COLORS = {
   border: {
     primary: "#d1d5db",
     secondary: "#e5e7eb",
+    light: "rgba(255, 255, 255, 0.1)",
     focus: "#667eea",
     error: "#ff4d4f",
     success: "#52c41a",

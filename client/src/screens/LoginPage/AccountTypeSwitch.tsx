@@ -1,13 +1,11 @@
 import React from "react";
-import { Switch } from "antd";
+import { Switch, Typography } from "antd";
 import { FormInstance } from "antd/es/form";
 import { AccountType } from "../../types";
-import {
-  AccountTypeContainer,
-  AccountTypeInfo,
-  AccountTypeLabel,
-  AccountTypeDescription,
-} from "./LoginPage.styles";
+import { FONT_SIZES } from "../../styles";
+import { AccountTypeContainer, AccountTypeInfo } from "./LoginPage.styles";
+
+const { Text } = Typography;
 
 interface AccountTypeSwitchProps {
   form: FormInstance;
@@ -19,12 +17,12 @@ const AccountTypeSwitch: React.FC<AccountTypeSwitchProps> = ({ form }) => {
   return (
     <AccountTypeContainer>
       <AccountTypeInfo>
-        <AccountTypeLabel>Account Type</AccountTypeLabel>
-        <AccountTypeDescription type="secondary">
+        <Text strong>Account Type</Text>
+        <Text type="secondary" style={{ fontSize: FONT_SIZES.sm }}>
           {isAdmin
             ? "Admin - Can create rooms"
             : "Regular User - Can join rooms"}
-        </AccountTypeDescription>
+        </Text>
       </AccountTypeInfo>
       <Switch
         checkedChildren={AccountType.ADMIN}
